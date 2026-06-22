@@ -1,0 +1,191 @@
+using System;
+
+namespace ZofraTacna.Models
+{
+    public class Documento
+    {
+        public int      IdDocumento             { get; set; }
+        public string   CodigoDocumento         { get; set; }
+        public string   Asunto                  { get; set; }
+        public string   Descripcion             { get; set; }
+        public int      IdTipoDocumento         { get; set; }
+        public string   AreaResponsable         { get; set; }
+        public string   AreaCategoria           { get; set; }
+        public DateTime FechaCreacion           { get; set; }
+        public string   LoginUsuarioRegistrador { get; set; }
+        public string   RutaArchivoPDF          { get; set; }
+        public string   RutaArchivoPDF_Firmado  { get; set; }
+        public int      IdEstadoDocumento       { get; set; }
+        public string   Prioridad               { get; set; }
+        public DateTime FechaLimiteRevision     { get; set; }
+        public DateTime FechaLimiteAprobacion   { get; set; }
+        public bool     Activo                  { get; set; }
+    }
+
+    public class DocumentoParticipante
+    {
+        public int      IdParticipante          { get; set; }
+        public int      IdDocumento             { get; set; }
+        public string   LoginUsuario            { get; set; }
+        public int      OrdenSecuencial         { get; set; }
+        public int      IdTipoParticipante      { get; set; }
+        public int      EstadoParticipante      { get; set; }
+        public string   CorreoInstitucional     { get; set; }
+    }
+
+    public class DocumentoAdjunto
+    {
+        public int      IdAdjunto               { get; set; }
+        public int      IdDocumento             { get; set; }
+        public byte[]   ContenidoPDF            { get; set; }
+        public string   NombreArchivo           { get; set; }
+        public string   TipoMime                { get; set; }
+        public int      TamanioBytes             { get; set; }
+        public string   UsuarioCreacion         { get; set; }
+    }
+
+    /// <summary>PDF archivado en FirmaDigital_Files tras correccion del registrador (auditoria).</summary>
+    public class AdjuntoArchivadoInfo
+    {
+        public int       IdAdjunto         { get; set; }
+        public string    NombreArchivo     { get; set; }
+        public DateTime? FechaSuperacion   { get; set; }
+        public string    MotivoSuperacion  { get; set; }
+        public DateTime  FechaCreacion     { get; set; }
+    }
+
+    public class RegistrarDocumentoRequest
+    {
+        public string   CodigoDocumento         { get; set; }  // Ej: RS, AD, etc
+        public string   NumeroDocumento         { get; set; }  // Ej: 001, 002, etc
+        public int      AnoDocumento            { get; set; }  // Ej: 2026
+        public string   Asunto                  { get; set; }
+        public string   Descripcion             { get; set; }
+        public int      IdTipoDocumento         { get; set; }
+        public int      IDUnidadOrganica        { get; set; }  // Área/Unidad Orgánica
+        public string   Prioridad               { get; set; }
+        public int      HorasRevision           { get; set; }
+        public int      HorasFirma              { get; set; }
+        public byte[]   ContenidoPDF            { get; set; }
+        public string   NombreArchivoPDF        { get; set; }
+        public System.Collections.Generic.List<RegistrarParticipanteItem> Participantes { get; set; }
+    }
+
+    public class RegistrarParticipanteItem
+    {
+        public int      Orden                   { get; set; }
+        public string   Login                   { get; set; }
+        public string   Tipo                    { get; set; }
+    }
+
+    public class RevisionDetalle
+    {
+        public int      IdRevision     { get; set; }
+        public int      IdParticipante { get; set; }
+        public string   Comentario     { get; set; }
+        public bool     EsObservacion  { get; set; }
+        public DateTime FechaRevision  { get; set; }
+    }
+
+    /// <summary>Marcador de observacion anclado a una pagina del PDF.</summary>
+    public class ObservacionMarcadorItem
+    {
+        public int     IdMarcador        { get; set; }
+        public int     IdDocumento       { get; set; }
+        public string  LoginUsuario      { get; set; }
+        public string  TipoMarcador      { get; set; }
+        public int     Pagina            { get; set; }
+        public double  PosX              { get; set; }
+        public double  PosY              { get; set; }
+        public double? Ancho             { get; set; }
+        public double? Alto              { get; set; }
+        public string  TextoSeleccionado { get; set; }
+        public string  Comentario        { get; set; }
+        public bool    EsBorrador        { get; set; }
+        public DateTime FechaCreacion    { get; set; }
+    }
+
+    /// <summary>Observacion vigente o ya archivada al subsanar (VerObservaciones).</summary>
+    public class ObservacionFlujoItem
+    {
+        public bool     Levantada            { get; set; }
+        public string   LoginRevisor         { get; set; }
+        public string   Comentario           { get; set; }
+        public DateTime FechaObservacion     { get; set; }
+        public DateTime? FechaLevantamiento { get; set; }
+        public string   LoginLevantamiento   { get; set; }
+    }
+
+    public class FirmaDetalle
+    {
+        public int      IdFirma          { get; set; }
+        public int      IdParticipante   { get; set; }
+        public int      IdEstadoFirma    { get; set; }
+        public string   FirmaDigitalHash { get; set; }
+        public DateTime? FechaFirma      { get; set; }
+    }
+
+    public class HistorialDocumento
+    {
+        public int      IdHistorial        { get; set; }
+        public int      IdDocumento        { get; set; }
+        public int?     IdEstadoAnterior   { get; set; }
+        public int      IdEstadoNuevo      { get; set; }
+        public string   LoginUsuarioAccion { get; set; }
+        public string   DetalleAccion      { get; set; }
+        public DateTime FechaCambio        { get; set; }
+    }
+
+    public class EmpleadoDTO
+    {
+        public int      IDEmpleado      { get; set; }
+        public string   LoginUsuario    { get; set; }
+        public string   Nombre          { get; set; }
+        public string   Apellido        { get; set; }
+        public string   NombreCompleto  { get; set; }
+        public string   Email           { get; set; }
+        public bool     EnSistema       { get; set; }  // Si ya está en UsuarioSistema
+    }
+
+    public class ParticipanteAsignadoDTO
+    {
+        public string   LoginUsuario    { get; set; }
+        public string   NombreCompleto  { get; set; }
+        public string   Tipo            { get; set; }  // REV o FIR
+        public int      Orden           { get; set; }
+    }
+
+    /// <summary>Evento ordenado para la línea de tiempo en revisión.</summary>
+    public class LineaTiempoEvento
+    {
+        public DateTime Fecha { get; set; }
+        public string Titulo { get; set; }
+        public string Detalle { get; set; }
+        /// <summary>CSS: tl-reg | tl-estado | tl-aprob | tl-obs</summary>
+        public string TipoCss { get; set; }
+    }
+
+    /// <summary>Fila para panel Documentos recientes (Default.aspx admin).</summary>
+    public class DashboardDocReciente
+    {
+        public int      IdDocumento          { get; set; }
+        public string   Asunto               { get; set; }
+        public string   CodigoDocumento      { get; set; }
+        public DateTime FechaReferencia      { get; set; }
+        public string   LoginRegistrador     { get; set; }
+        public string   EstadoCod            { get; set; }
+        public string   EstadoDesc           { get; set; }
+    }
+
+    /// <summary>Fila para panel Actividad del sistema (historial de documentos).</summary>
+    public class DashboardActividadItem
+    {
+        public DateTime FechaCambio          { get; set; }
+        public string   LoginUsuarioAccion   { get; set; }
+        public string   DetalleAccion      { get; set; }
+        public string   EstadoCod          { get; set; }
+        public string   EstadoDesc         { get; set; }
+        public int      IdDocumento        { get; set; }
+        public string   CodigoDocumento    { get; set; }
+    }
+}
